@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Interactive ROI Quadrant</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      text-align: center;
+      margin: 20px;
+    }
+    .slider-container {
+      margin: 20px auto;
+      width: 80%;
+    }
+    #quadrant-container {
+      position: relative;
+      width: 400px;
+      height: 400px;
+      margin: 0 auto;
+    }
+    #quadrant {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: 2px solid #000;
+      background-color: #f5f5f5;
+    }
+    #quadrant::before,
+    #quadrant::after {
+      content: "";
+      position: absolute;
+      background-color: #888;
+    }
+    #quadrant::before {
+      top: 50%;
+      left: 0;
+      width: 100%;
+      height: 1px;
+    }
+    #quadrant::after {
+      left: 50%;
+      top: 0;
+      height: 100%;
+      width: 1px;
+    }
+    #dot {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      background-color: red;
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+    }
+    .x-labels, .y-labels {
+      position: absolute;
+      font-weight: bold;
+      font-size: 14px;
+    }
+    .x-labels.low {
+      bottom: -20px;
+      left: 25%;
+    }
+    .x-labels.high {
+      bottom: -20px;
+      left: 75%;
+    }
+    .y-labels.low {
+      top: 75%;
+      left: -30px;
+    }
+    .y-labels.high {
+      top: 25%;
+      left: -30px;
+    }
+    label {
+      display: inline-block;
+      width: 150px;
+    }
+  </style>
+</head>
+<body>
+  <h1>ROI Quadrant: Effort vs. Impact</h1>
+  <div class="slider-container">
+    <label for="xInput">Effort (0–10):</label>
+    <input type="range" id="xInput" min="0" max="10" value="0" step="1" />
+    <span id="xVal">0</span>
+  </div>
+  <div class="slider-container">
+    <label for="yInput">Impact (0–10):</label>
+    <input type="range" id="yInput" min="0" max="10" value="0" step="1" />
+    <span id="yVal">0</span>
+  </div>
+  <div id="quadrant-container">
+    <div class="x-labels low">Low</div>
+    <div class="x-labels high">High</div>
+    <div class="y-labels low">Low</div>
+    <div class="y-labels high">High</div>
+    <div id="quadrant">
+      <div id="dot"></div>
+    </div>
+  </div>
+
+  <script>
+    const xInput = document.getElementById('xInput');
+    const yInput = document.getElementById('yInput');
+    const xVal = document.getElementById('xVal');
+    const yVal = document.getElementById('yVal');
+    const dot = document.getElementById('dot');
+    const quadrant = document.getElementById('quadrant');
+
+    function updateDot() {
+      const x = parseInt(xInput.value);
+      const y = parseInt(yInput.value);
+
+      xVal.textContent = x;
+      yVal.textContent = y;
+
+      const xPercent = x / 10;
+      const yPercent = 1 - y / 10;
+
+      const xPos = xPercent * quadrant.clientWidth;
+      const yPos = yPercent * quadrant.clientHeight;
+
+      dot.style.left = `${xPos}px`;
+      dot.style.top = `${yPos}px`;
+    }
+
+    xInput.addEventListener('input', updateDot);
+    yInput.addEventListener('input', updateDot);
+
+    updateDot();
+  </script>
+</body>
+</html>
